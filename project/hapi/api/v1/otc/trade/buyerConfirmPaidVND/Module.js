@@ -8,8 +8,6 @@ const AccountModel = require('project/models/AccountModel');
 const SendEmailWorker = require('project/worker/SendEmail');
 const numeral = require('numeral');
 const SocialConfig = require('project/config/SocialId');
-const NotificationModel = require('project/models/NotificationModel');
-const SendNotificationWorker = require('project/worker/SendNotification');
 
 module.exports = async (request, reply) => {
   const { payload } = request;

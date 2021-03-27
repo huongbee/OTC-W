@@ -9,7 +9,7 @@ const AsyncForEach = require('await-async-foreach');
 const Variable = {
   POOL_LOAD: null,
   POOL_EXCUTE: null,
-  AVAILABLE_ITEM: 100,
+  AVAILABLE_ITEM: 10,
   STOP_PREFIX: {}
 };
 
@@ -52,33 +52,7 @@ const TransactionModule = {
   async Init(...prefix) {
     Variable.POOL_LOAD = Async.queue((task, callback) => {
       try {
-        // redisService.delete('ACCOUNT_ID_PROD');
-        // redisService.delete('OTC_ADS_TRANSACTION');
-        // redisService.delete('TRADE_TRANSACTION_PROD');
-        // redisService.delete('SYSTEM_CHANGE_BALANCE_PROD');
-        // (async () => {
-        //   const lists = await redisService.keys('OTC_ADS_TRANSACTION*');
-        //   console.log(lists);
-        //   _.forEach(lists, item => {
-        //     redisService.delete(item);
-        //   });
-        //   const lists2 = await redisService.keys('TRADE_TRANSACTION_PROD*');
-        //   console.log(lists2);
-        //   _.forEach(lists2, item => {
-        //     redisService.delete(item);
-        //   });
-        // })();
         (async () => {
-          // const lists = await redisService.keys('ADS_TRANSACTION*');
-          // console.log(lists);
-          // _.forEach(lists, item => {
-          //   redisService.delete(item);
-          // });
-          // const lists2 = await redisService.keys('TRADE_TRANSACTION*');
-          // console.log(lists2);
-          // _.forEach(lists2, item => {
-          //   redisService.delete(item);
-          // });
         })();
         (async () => {
           const prefixInfos = await UuidPrefixConfigModel.find({ prefix: { $in: prefix } }).select('-_id').lean();
@@ -86,11 +60,11 @@ const TransactionModule = {
             if (_.get(Variable, `STOP_PREFIX.${prefixInfo.prefix}`, true) === true) {
               const availableItem = await redisService.llen(prefixInfo.prefix);
               if (availableItem < Variable.AVAILABLE_ITEM) {
-                let count = 100;
+                let count = 10;
                 if (Variable.AVAILABLE_ITEM - availableItem < count) {
                   count = Variable.AVAILABLE_ITEM - availableItem;
                 }
-                console.log({ count, availableItem });
+                // console.log({ count, availableItem });
                 _.forEach(new Array(count), () => {
                   Variable.POOL_EXCUTE.push(prefixInfo);
                 });

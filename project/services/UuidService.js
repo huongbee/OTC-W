@@ -35,7 +35,7 @@ class UuidService {
         return response;
       }
       const arrayUUID = await redisService.lpop(this.prefix);
-      console.log({ arrayUUID });
+      // console.log({ arrayUUID });
       // if (!arrayUUID) {
       //   response.message = 'Lấy uuid thất bại, vui lòng thử lại';
       //   return response;

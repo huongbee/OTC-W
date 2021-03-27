@@ -19,9 +19,6 @@ const SocialConfig = require('project/config/SocialId');
 const PartnerModel = require('project/models/PartnerModel');
 const CommisionModel = require('project/models/CommisionModel');
 const ExternalService = require('project/services/ExternalService');
-const SendNotificationWorker = require('project/worker/SendNotification');
-const NotificationModel = require('project/models/NotificationModel');
-const BankConstant = require('project/constants/BankConstant');
 
 // User Bán V => khớp lệnh BUY => tỉnh tỉ giá BUY
 // Đại lý mua V
@@ -37,7 +34,9 @@ module.exports = async (request, reply) => {
     if (!bankInfo) {
       throw { message: 'Vui lòng thêm thông tin ngân hàng mặc định' };
     }
-
+    if (payload.amount > 100000000 || payload.amount < 10000) {
+      throw { message: 'Số V giao dịch không phù hợp' };
+    }
     if (accountInfo.accountType === 3) { // danh cho account đối tác C3
       const partnerInfo = await PartnerModel.findOne({ accountId: authInfo.accountId }).lean();
       // if (!partnerInfo) {
@@ -56,7 +55,7 @@ module.exports = async (request, reply) => {
       console.log('External SELL: totalV=>>>>', totalV, 'userBalance=>>>>>', JSON.stringify(userBalance));
       if (totalV > userBalance.availableBalance) throw { message: 'Không đủ số V trong tài khoản' };
 
-      const uuidService = new UuidService('TRADE_TRANSACTION_PROD');
+      const uuidService = new UuidService('OTC_TRADE_TRANSACTION');
       let uuidData = await uuidService.getUUID(1, payload);
       let transaction = uniqid.process().toUpperCase();
       if (uuidData.code === 1 && uuidData.data.length > 0) {
@@ -333,7 +332,7 @@ module.exports = async (request, reply) => {
       },
       { new: true });
 
-    const uuidService = new UuidService('TRADE_TRANSACTION_PROD');
+    const uuidService = new UuidService('OTC_TRADE_TRANSACTION');
     const uuidData = await uuidService.getUUID(1, payload);
     let transaction = uniqid.process().toUpperCase();
     if (uuidData.code === 1 && uuidData.data.length > 0) {

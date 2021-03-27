@@ -75,15 +75,24 @@ const Register = async (request, reply) => {
       if (_.get(refInfo, 'id', null) !== null) {
         parentId = refInfo.id;
       }
+      else {
+        return reply.api({
+          message: request.__('Không tìm thấy tài khoản parent')
+        }).code(ResponseCode.REQUEST_FAIL);
+      }
     }
     const newUser = await AccountModel.create({
+      phone,
+      gender: payload.gender,
+      birthday: payload.birthday,
       id: uuidAccountId,
       username: payload.username,
       email: payload.email,
       fullname: payload.fullname,
       isActive: false,
       accountType,
-      parentId
+      parentId,
+      password: (new PasswordHelper()).encryptPassword(payload.password)
     });
     if (!newUser) {
       return reply.api({

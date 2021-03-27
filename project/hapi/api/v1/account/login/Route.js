@@ -11,9 +11,8 @@ module.exports = [
       description: 'User login',
       validate: {
         payload: Joi.object({
-          account: Joi.string().required().example('superadmin@gmail.com').description('username/email'),
-          password: Joi.string().required().example('bcb15f821479b4d5772bd0ca866c00ad5f926e3580720659cc80d39c9d09802a').description('Mật khẩu'),
-          securityCode: Joi.string().allow(null, '').length(6).example('123211').description('OTP xác thực 2 bước')
+          account: Joi.string().required().example('user.level3@gmail.com').description('username/email'),
+          password: Joi.string().required().example('bcb15f821479b4d5772bd0ca866c00ad5f926e3580720659cc80d39c9d09802a').description('Mật khẩu')
         })
       },
       tags: ['api', 'v1', 'account'],

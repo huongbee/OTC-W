@@ -18,6 +18,7 @@ module.exports = async (request, reply) => {
 
     if (_.get(userInfo, 'id', false) !== false) {
       const { transaction, type } = request.params;
+
       let trade = await TradeRequestModel.findOne({
         transaction,
         // type: TradeConstant.TRADE_TYPE.BUY,

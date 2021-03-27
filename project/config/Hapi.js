@@ -70,7 +70,7 @@ module.exports = {
           return true;
         },
         message: {
-          401: 'Thông tin xác thực không hợp lệ',
+          401: 'Vui lòng đăng nhập',
           404: 'Api không tồn tại',
           500: 'Vui lòng thử lại!'
         }

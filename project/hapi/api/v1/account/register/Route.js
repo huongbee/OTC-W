@@ -13,9 +13,9 @@ module.exports = [
       description: 'Register a new account',
       validate: {
         payload: Joi.object({
-          username: Joi.string().required().example('trangnt').description('User name'),
-          email: Joi.string().allow(null, '').example('trangnt@gmail.com').description('Email'),
-          phone: Joi.string().allow(null, '').example('84983922933').description('Số điện thoại'),
+          username: Joi.string().required().example('huongntn').description('User name'),
+          email: Joi.string().allow(null, '').example('huongntn@gmail.com').description('Email'),
+          phone: Joi.string().allow(null, '').example('03887575738').description('Số điện thoại'),
           password: Joi.string().required().example('sha256').description('Mật khẩu'),
           fullname: Joi.string().required().example('Nguyễn Văn A').description('Họ và tên'),
           gender: Joi.string().required().allow(null, '').valid('MALE', 'FEMALE', 'OTHER').example('MALE').description('Giới tính'),

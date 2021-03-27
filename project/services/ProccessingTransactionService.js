@@ -658,11 +658,6 @@ module.exports = {
       accountId: accountInfo.id
       // type: TradeConstant.TRADE_TYPE.SELL
     }).lean();
-    console.log('Thong tin GD bán--------->', JSON.stringify({
-      transaction: payload.transaction,
-      accountId: accountInfo.id,
-      sellerTradeRequestInfo
-    }));
     if (!sellerTradeRequestInfo) {
       response.message = 'Không tìm thấy thông tin giao dịch';
       return response;
@@ -955,7 +950,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }
@@ -1374,10 +1368,6 @@ module.exports = {
       transaction: payload.transaction,
       accountId: sellerAccountInfo.id
     }).lean();
-    console.log('Thong tin GD bán--------->', JSON.stringify({
-      payload,
-      sellerTradeRequestInfo
-    }));
     if (!sellerTradeRequestInfo) {
       response.message = 'Không tìm thấy thông tin giao dịch';
       return response;
@@ -1504,7 +1494,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }
@@ -1677,7 +1666,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }
@@ -1881,7 +1869,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }
@@ -2870,7 +2857,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }
@@ -3120,7 +3106,6 @@ module.exports = {
           sellerTradeRequestInfo,
           `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
         );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
         if (minusCommisionA0Data.code !== 1) {
           // throw Error(minusCommisionData.message);
         }

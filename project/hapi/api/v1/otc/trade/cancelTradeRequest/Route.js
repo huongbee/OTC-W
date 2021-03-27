@@ -6,14 +6,14 @@ const Joi = require('mecore').Joi;
 module.exports = [
   {
     method: 'DELETE',
-    path: '/v1/trade-request/{transaction}',
+    path: '/v1/trade-request/{transaction}/{type?}',
     handler: require('./Module'),
     options: {
       description: 'Hủy giao dịch ',
       validate: {
         params: Joi.object({
           transaction: Joi.string().example('345678906543').description('Mã giao dịch'),
-          type: Joi.string().example(TradeConstant.TRADE_TYPE.BUY).default(TradeConstant.TRADE_TYPE.BUY).valid(..._.values(TradeConstant.TRADE_TYPE)).description('Loại GD')
+          type: Joi.string().example(TradeConstant.TRADE_TYPE.BUY).valid(..._.values(TradeConstant.TRADE_TYPE)).description('Loại GD')
         })
       },
       tags: ['api', 'v1', 'otc-trade-request', 'buy'],

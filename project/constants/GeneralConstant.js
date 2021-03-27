@@ -110,9 +110,9 @@ module.exports = {
     TRADE_EXPIRED: 'Giao dịch bị hủy hoặc hết hạn'
   },
   SYSTEM_ACCOUNT_EMAIL: 'huongnguyenak96@gmail.com', // account email A0 chia commision
-  SYSTEM_ACCOUNT_LEVEL0: 'huongnguyenak96@gmail.com', // MC LV 0 - dùng để khớp lệnh bán V cho các đại lý cấp dưới
-  SYSTEM_ACCOUNT_LEVEL1: 'huongnguyenak96@gmail.com', // account level 1 nhận commision từ nhưng account level 2 ko có cấp cha
-  SYSTEM_ACCOUNT_LEVEL2: 'huongnguyenak96@gmail.com',// account level 2 luôn nhận lệnh nếu các level 2 khác từ chối
+  SYSTEM_ACCOUNT_LEVEL0: 'huong.lv0@gmail.com', // MC LV 0 - dùng để khớp lệnh bán V cho các đại lý cấp dưới
+  SYSTEM_ACCOUNT_LEVEL1: 'huong.lv1@gmail.com', // account level 1 nhận commision từ nhưng account level 2 ko có cấp cha
+  SYSTEM_ACCOUNT_LEVEL2: 'huong.lv2@gmail.com',// account level 2 luôn nhận lệnh nếu các level 2 khác từ chối
   SYSTEM_ADMIN: 'huongntn@payme.vn',
 
   COMMISION_PERCENT: 0.3,

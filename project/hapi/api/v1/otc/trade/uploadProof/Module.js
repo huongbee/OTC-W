@@ -6,10 +6,7 @@ const Fs = require('fs');
 const Path = require('path');
 const Randomstring = require('randomstring');
 const TradeRequestModel = require('project/models/TradeRequestModel');
-const CommisionModel = require('project/models/CommisionModel');
 const TradeConstant = require('project/constants/TradeConstant');
-const UserBalanceService = require('project/services/UserBalanceService');
-const ExternalService = require('project/services/ExternalService');
 const RequestService = require('project/services/RequestService');
 const AccountModel = require('project/models/AccountModel');
 const SendEmailWorker = require('project/worker/SendEmail');
@@ -19,8 +16,6 @@ const AdsModel = require('project/models/AdsModel');
 const AccessTokenModel = require('project/models/AccessTokenModel');
 const JsonWebToken = require('jsonwebtoken');
 const AuthenticationConfig = require('project/config/Authentication');
-const NotificationModel = require('project/models/NotificationModel');
-const SendNotificationWorker = require('project/worker/SendNotification');
 
 //TODO kiểm tra khác amount
 module.exports = async (request, reply) => {
@@ -92,153 +87,11 @@ module.exports = async (request, reply) => {
         message: 'Upload thất bại'
       }).code(ResponseCode.REQUEST_FAIL);
     }
-    // update file cho buyerTradeRequest
-    // await TradeRequestModel.updateMany(
-    //   { transaction: payload.transaction },
-    //   {
-    //     $set: {
-    //       status: TradeConstant.TRADE_STATUS.PAID,
-    //       proof: {
-    //         filePath: response[0].path,
-    //         sentAt: new Date()
-    //       }
-    //     }
-    //   });
     let sellerTradeRequestInfo = await TradeRequestModel.findOne({
       transaction: buyerTradeRequest.transaction,
       type: TradeConstant.TRADE_TYPE.SELL
     });
     if (sellerTradeRequestInfo.partnerTransaction) {
-      // lệnh mua  của mình khớp lệnh SELL của đối tác => BUY V => +V, -vnd
-      // update 2 trade requests
-
-      //#region GD thành công luôn sau đó cho TH user trong hệ thống xác nhận GD SELL của partner
-      /**
-        const update2TradeRequest = await TradeRequestModel.updateMany(
-          { transaction: buyerTradeRequest.transaction },
-          {
-            $set: {
-              status: TradeConstant.TRADE_STATUS.SUCCEEDED,
-              filledValue: buyerTradeRequest.totalValue,
-              filledAmount: buyerTradeRequest.totalAmount,
-              proof: {
-                filePath: response[0].path,
-                sentAt: new Date()
-              }
-            }
-          },
-          { multi: true }
-        );
-        if (!update2TradeRequest || update2TradeRequest.nModified !== 2) {
-          throw { message: 'Không thể cập nhật trạng thái giao dịch, vui lòng kiểm tra lại!' };
-        }
-        // +filledAmount trong ads
-        await AdsModel.updateOne(
-          { id: buyerTradeRequest.adsId },
-          {
-            $inc: {
-              filledAmount: buyerTradeRequest.totalAmount
-            }
-          });
-        // update GD commision của A0 thành công
-        let systemAccountId = null;
-        const systemAccount = await AccountModel.findOne({ email: GeneralConstant.SYSTEM_ACCOUNT_EMAIL }).lean();
-        if (systemAccount) systemAccountId = systemAccount.id;
-        const commissionA0 = await CommisionModel.findOne({
-          accountId: systemAccountId,
-          transaction: buyerTradeRequest.transaction,
-          sourceName: GeneralConstant.SOURCE_NAME.TRADE
-        }).lean();
-        if (!commissionA0) {
-          console.log('Không tìm thấy giao dịch commision =>>>> FIND BY', JSON.stringify({
-            accountId: systemAccountId,
-            transaction: buyerTradeRequest.transaction,
-            sourceName: GeneralConstant.SOURCE_NAME.TRADE
-          }));
-          throw { message: 'Không tìm thấy giao dịch commision' };
-        }
-        await CommisionModel.updateOne(
-          { id: commissionA0.id },
-          { status: TradeConstant.COMMISION_STATUS.SUCCEEDED }
-        );
-        // +V  cho người mua
-        const userBalanceCreate = await UserBalanceService.addBalance(
-          buyerTradeRequest.accountId,
-          buyerTradeRequest.amount,
-          `Mua V #${buyerTradeRequest.transaction}`,
-          sellerTradeRequestInfo,
-          GeneralConstant.SOURCE_NAME.TRADE
-        );
-        if (userBalanceCreate.code !== 1) {
-          //TODO
-          throw { message: 'Không thể cộng V cho người mua!' };
-        }
-        // +V cho A0
-        const addCommisionA0Data = await UserBalanceService.addBalance(
-          commissionA0.accountId,
-          commissionA0.amount,
-          `Cộng commision từ fee của GD bán V #${sellerTradeRequestInfo.transaction}`,
-          commissionA0,
-          GeneralConstant.SOURCE_NAME.COMMISION
-        );
-        if (addCommisionA0Data.code !== 1) {
-       throw { message: 'Không thể cộng V cho user cấp 0!' };
-        }
-
-        // -V của A0 để chia cho A1 và A2
-        const minusCommisionA0Data = await ExternalService.minusCommissionSystemUser(
-          {
-            amount: sellerTradeRequestInfo.amount,
-            transaction: sellerTradeRequestInfo.transaction
-          },
-          sellerTradeRequestInfo,
-          `Chia commision cho user từ GD bán #${sellerTradeRequestInfo.transaction}`
-        );
-        console.log('--------->Trừ commision A0!', JSON.stringify(minusCommisionA0Data));
-        if (minusCommisionA0Data.code !== 1) {
-          // throw Error(minusCommisionData.message);
-        }
-        // +V cho các cấp user
-        const commisionData = await ExternalService.addCommissionUser(
-          {
-            amount: buyerTradeRequest.amount,
-            transaction: buyerTradeRequest.transaction
-          },
-          buyerTradeRequest,
-          GeneralConstant.COMMISION_TYPE.COMMISION,
-          `Nhận commision từ giao dịch mua #${buyerTradeRequest.transaction}`
-        );
-        if (commisionData.code !== 1) {
-          console.log('Upload bằng chứng chuyển tiển--------->chia commision cho user C1 và C2 Errorrrrrr!', JSON.stringify(commisionData));
-          // throw Error(commisionData.message);
-
-        }
-        console.log('sellerTradeRequestInfo upload proof =>>>>', JSON.stringify(sellerTradeRequestInfo));
-        if (sellerTradeRequestInfo.ipnUrl) {
-          sellerTradeRequestInfo = await TradeRequestModel.findOne({
-            id: sellerTradeRequestInfo.id
-          }).lean();
-          const body = {
-            transaction: sellerTradeRequestInfo.transaction,
-            partnerTransaction: sellerTradeRequestInfo.partnerTransaction,
-            amountInfo: {
-              amount: sellerTradeRequestInfo.amount,
-              fee: sellerTradeRequestInfo.feeAmount,
-              total: sellerTradeRequestInfo.totalAmount
-            },
-            valueInfo: {
-              value: sellerTradeRequestInfo.value,
-              fee: sellerTradeRequestInfo.fee,
-              total: sellerTradeRequestInfo.totalValue
-            },
-            status: TradeConstant.TRADE_STATUS.SUCCEEDED
-          };
-          const logRequest = await RequestService.requestPost(sellerTradeRequestInfo.ipnUrl, null, body, {});
-          console.log('1----/v1/trade-request/xác nhận đã thanh toán: sellerTradeRequestInfo.ipnUrl response from ', sellerTradeRequestInfo.ipnUrl, JSON.stringify({ body, logRequest }));
-        }
-     */
-      //#endregion
-
       await TradeRequestModel.updateMany(
         {
           id: { $in: [buyerTradeRequest.id, sellerTradeRequestInfo.id] }

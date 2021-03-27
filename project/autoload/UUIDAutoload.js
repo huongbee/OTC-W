@@ -7,7 +7,7 @@ module.exports = {
     require('project/worker/UUIDGenerate').Init(
       'OTC_ACCOUNT_ID',
       'OTC_ADS_TRANSACTION',
-      'TRADE_TRANSACTION_PROD',
+      'OTC_TRADE_TRANSACTION',
       'SYSTEM_CHANGE_BALANCE_PROD' // system withdraw or deposit balance user
     );
     logger.debug('UUID is running....');
