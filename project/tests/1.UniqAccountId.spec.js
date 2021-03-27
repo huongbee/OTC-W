@@ -14,7 +14,7 @@ const _ = require('lodash');
 
 describe('Account', () => {
   const username = randomString();
-  test('Unique AccountId', async () => {
+  test('Unique AccountId', async (done) => {
     const result = await RequestService.requestPost(host, '/v1/account/register', {
       username,
       email: username + '@gmail.com',
@@ -24,10 +24,16 @@ describe('Account', () => {
       gender: 'OTHER',
       birthday: moment(new Date())
     });
+    expect(result.data.id).toBeTruthy();
     const checkUniq = await AccountModel.countDocuments({ id: _.toNumber(result.data.id) });
     expect(checkUniq).toBe(1);
+    done();
   });
   afterEach(async () => {
     await AccountModel.deleteOne({ username });
+  });
+  afterAll(async (done) => {
+    await mongoose.connection.close();
+    done();
   });
 });

@@ -44,6 +44,10 @@ class UuidService {
         prefix: this.prefix,
         state: GeneralConstant.UUID_STATE.NEW
       }).lean();
+      if (!uuidData) {
+        response.message = 'Lấy uuid thất bại, vui lòng thử lại';
+        return response;
+      }
       const updateInfo = await UuidModel.updateMany(
         { uuid: uuidData.uuid },
         {
