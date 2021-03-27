@@ -16,7 +16,7 @@ module.exports = [
           adsId: Joi.number().allow(null, '').example(1).description('Mã quảng cáo')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'sell'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

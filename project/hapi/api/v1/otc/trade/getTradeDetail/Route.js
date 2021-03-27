@@ -15,7 +15,7 @@ module.exports = [
           transaction: Joi.string().example('98765432123').description('transaction')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'sell', 'buy'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

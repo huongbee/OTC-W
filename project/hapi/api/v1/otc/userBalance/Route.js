@@ -10,7 +10,7 @@ module.exports = [
     options: {
       description: 'Lấy số dư tài khoản',
       validate: {},
-      tags: ['api', 'v1', 'otc-user'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

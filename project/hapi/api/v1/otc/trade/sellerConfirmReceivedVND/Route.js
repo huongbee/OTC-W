@@ -17,7 +17,7 @@ module.exports = [
           amount: Joi.number().required().example(100000).description('Số tiền đã nhận ')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'buy'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

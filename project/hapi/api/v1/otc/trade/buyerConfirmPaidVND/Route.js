@@ -16,7 +16,7 @@ module.exports = [
           filePath: Joi.string().required().example('https://static.wmv.money/12345678.png').description('đường dẫn file BCCT')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'sell'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

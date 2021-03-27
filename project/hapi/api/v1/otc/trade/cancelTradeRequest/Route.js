@@ -16,7 +16,7 @@ module.exports = [
           type: Joi.string().example(TradeConstant.TRADE_TYPE.BUY).valid(..._.values(TradeConstant.TRADE_TYPE)).description('Loại GD')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'buy'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

@@ -23,7 +23,7 @@ module.exports = [
           sort: Joi.object({}).default({ updatedAt: -1 }).description('Sort field')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'sell', 'buy'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

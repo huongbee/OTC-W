@@ -29,7 +29,7 @@ module.exports = [
           sort: Joi.object().example({ createdAt: -1 }).default({ createdAt: -1 }).description('Điều kiện sắp xếp dữ liệu')
         })
       },
-      tags: ['api', 'v1', 'otc-user'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({

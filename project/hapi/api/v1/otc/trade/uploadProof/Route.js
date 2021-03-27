@@ -22,7 +22,7 @@ module.exports = [
           transaction: Joi.required().example('234567832343').description('transaction Id')
         })
       },
-      tags: ['api', 'v1', 'otc-trade-request', 'sell'],
+      tags: ['api', 'v1'],
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({
