@@ -92,6 +92,7 @@ const Model = {
       default: []
     }
   }, {
+    collection: 'Account',
     timestamps: true
   })
 };
