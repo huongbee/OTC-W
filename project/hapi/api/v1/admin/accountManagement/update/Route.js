@@ -17,7 +17,7 @@ module.exports = [
         }),
         payload: Joi.object({
           isActive: Joi.boolean().required().example(true).description('Cập nhật trạng thái tài khoản'),
-          accountType: Joi.number().required().example(GeneralConstant.ACCOUNT_TYPE.LEVEL_1).valid(..._.values(GeneralConstant.ACCOUNT_TYPE)).description('Loại tài khoản'),
+          accountType: Joi.number().allow(null, '').example(GeneralConstant.ACCOUNT_TYPE.LEVEL_1).valid(..._.values(GeneralConstant.ACCOUNT_TYPE)).description('Loại tài khoản'),
           email: Joi.string().allow(null, '').example('trangnt@gmail.com').description('Email')
         })
       },

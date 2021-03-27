@@ -11,6 +11,7 @@ const url = 'mongodb://127.0.0.1/otc_w_prod';
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 const RequestService = require('project/services/RequestService');
 
+// -	Mỗi user có một email duy nhất, không được trùng với email đã tồn tại trong hệ thống
 describe('Account', () => {
   const email = randomString() + '@gmail.com';
   test('Unique Email', async (done) => {

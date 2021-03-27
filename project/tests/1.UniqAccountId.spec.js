@@ -12,6 +12,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 const RequestService = require('project/services/RequestService');
 const _ = require('lodash');
 
+// -	Mỗi user khi đăng kí sẽ được cấp một mã tài khoản duy nhất.
 describe('Account', () => {
   const username = randomString();
   test('Unique AccountId', async (done) => {

@@ -267,14 +267,14 @@ module.exports = async (request, reply) => {
         });
       // push teleram notification
       const buyerInfo = await AccountModel.findOne({ id: adsInfo.accountId }).lean();
-      SendEmailWorker.pushSendEmail(
-        buyerInfo.email,
-        `Quý khách có giao dịch MUA mới<br>
-        Mã giao dịch: <b>#${tradeRequestBuyer.transaction}</b> <br>
-        Lượng giao dịch: ${numeral(tradeRequestBuyer.totalAmount).format('0,0')} </b> <br>
-        Xem chi tiết: <a href="${SocialConfig.environment.web}/home/trade/${tradeRequestBuyer.transaction}" target="_blank">TẠI ĐÂY</a>`,
-        `WMV thông báo giao dịch BÁN. #${tradeRequestBuyer.transaction}`,
-        'send-notification');
+      // SendEmailWorker.pushSendEmail(
+      //   buyerInfo.email,
+      //   `Quý khách có giao dịch MUA mới<br>
+      //   Mã giao dịch: <b>#${tradeRequestBuyer.transaction}</b> <br>
+      //   Lượng giao dịch: ${numeral(tradeRequestBuyer.totalAmount).format('0,0')} </b> <br>
+      //   Xem chi tiết: <a href="${SocialConfig.environment.web}/home/trade/${tradeRequestBuyer.transaction}" target="_blank">TẠI ĐÂY</a>`,
+      //   `WMV thông báo giao dịch BÁN. #${tradeRequestBuyer.transaction}`,
+      //   'send-notification');
       return reply.api({
         message: request.__('Tạo giao dịch thành công'),
         transaction: tradeRequestSeller.transaction,
@@ -429,14 +429,14 @@ module.exports = async (request, reply) => {
 
     // push teleram notification
     const buyerInfo = await AccountModel.findOne({ id: adsInfo.accountId }).lean();
-    SendEmailWorker.pushSendEmail(
-      buyerInfo.email,
-      `Quý khách có giao dịch MUA mới < br >
-        Mã giao dịch: <b>#${tradeRequestBuyer.transaction}</b> <br>
-          Lượng giao dịch: ${numeral(tradeRequestBuyer.totalAmount).format('0,0')} </b> <br>
-            Xem chi tiết: <a href="${SocialConfig.environment.web}/home/trade/${tradeRequestBuyer.transaction}" target="_blank">TẠI ĐÂY</a>`,
-      `WMV thông báo giao dịch BÁN. #${tradeRequestBuyer.transaction}`,
-      'send-notification');
+    // SendEmailWorker.pushSendEmail(
+    //   buyerInfo.email,
+    //   `Quý khách có giao dịch MUA mới < br >
+    //     Mã giao dịch: <b>#${tradeRequestBuyer.transaction}</b> <br>
+    //       Lượng giao dịch: ${numeral(tradeRequestBuyer.totalAmount).format('0,0')} </b> <br>
+    //         Xem chi tiết: <a href="${SocialConfig.environment.web}/home/trade/${tradeRequestBuyer.transaction}" target="_blank">TẠI ĐÂY</a>`,
+    //   `WMV thông báo giao dịch BÁN. #${tradeRequestBuyer.transaction}`,
+    //   'send-notification');
     return reply.api({
       message: request.__('Tạo giao dịch thành công'),
       transaction: tradeRequestSeller.transaction,

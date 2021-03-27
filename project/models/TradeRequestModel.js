@@ -212,6 +212,7 @@ const Model = {
       default: false
     }
   }, {
+    collection: 'TradeRequest',
     timestamps: true
   })
 };
