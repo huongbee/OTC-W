@@ -38,7 +38,10 @@ describe('Trade', () => {
     expect(checkUniq).toBe(1);
 
     // reset
-    await TradeRequestModel.deleteMany({ transaction: result.data.transaction });
+    const resultCancelTrade = await RequestService.requestDelete(host, `/test/v1/trade-request/${result.data.transaction}/SELL`, {}, {
+      authorization: resultLogin.data.accessToken
+    });
+    expect(resultCancelTrade.code).toBe(1000);
     done();
   });
   afterAll(async (done) => {

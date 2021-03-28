@@ -10,9 +10,9 @@ const AdsModel = mongoose.model('Ads_Temp', AdsSchema);
 const url = 'mongodb://127.0.0.1/otc_w_prod';
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// -	Khi khách hàng tạo giao dịch BÁN, phải có ít nhất 1 quảng cáo MUA phù hợp của đại lý cấp 2 để khớp lệnh.
+// -	-	Số Q cho một giao dịch BÁN tối thiểu là 10.000 và đối đa là 100.000.000
 describe('Trade', () => {
-  test('Without Ads > Throw Error', async (done) => {
+  test('Amount < 10.000 > Throw Error', async (done) => {
     const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
       account: 'user.level3@gmail.com',
       password: sha256('111111')
@@ -20,29 +20,15 @@ describe('Trade', () => {
     expect(resultLogin.code).toBe(1000);
     expect(resultLogin.data.accessToken).toBeTruthy();
 
-    const countActive = await AdsModel.countDocuments({ levelAllowed: 3, status: 'ACTIVE' });
-    if (countActive > 0) {
-      // cập nhật các quảng cáo INACTIVE
-      await AdsModel.updateMany(
-        { levelAllowed: 3 },
-        { $set: { status: 'INACTIVE' } }
-      );
-
-    }
     const resultEndpoint = await RequestService.requestPost(host, '/v1/trade-request/sell', {
-      amount: 10000
+      amount: 9999
     }, { authorization: resultLogin.data.accessToken });
     expect(resultEndpoint.code).toBe(1001);
-    expect(resultEndpoint.data.message).toBe('Không tìm thấy quảng cáo phù hợp');
-    if (countActive > 0) {
-      await AdsModel.updateMany(
-        { levelAllowed: 3 },
-        { $set: { status: 'ACTIVE' } }
-      );
-    }
+    expect(resultEndpoint.data.message).toBe('Số V giao dịch không phù hợp');
+
     done();
   });
-  test('Exists Ads >>Trade success', async (done) => {
+  test('Amount > 100.000.000 >>  Throw Error', async (done) => {
     const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
       account: 'user.level3@gmail.com',
       password: sha256('111111')
@@ -50,7 +36,22 @@ describe('Trade', () => {
     expect(resultLogin.code).toBe(1000);
     expect(resultLogin.data.accessToken).toBeTruthy();
 
-    // kiem tra có quảng cáo phù hợp
+    const resultEndpoint = await RequestService.requestPost(host, '/v1/trade-request/sell', {
+      amount: 100000001
+    }, { authorization: resultLogin.data.accessToken });
+    expect(resultEndpoint.code).toBe(1001);
+    expect(resultEndpoint.data.message).toBe('Số V giao dịch không phù hợp');
+    done();
+  });
+  test('10.000 <= Amount <=100.000.000 >> Success', async (done) => {
+    const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
+      account: 'user.level3@gmail.com',
+      password: sha256('111111')
+    });
+    expect(resultLogin.code).toBe(1000);
+    expect(resultLogin.data.accessToken).toBeTruthy();
+
+    // tạo quảng cáo để khhớp lệnh nếu ko có
     const countActive = await AdsModel.countDocuments({ levelAllowed: 3, status: 'ACTIVE' });
     let adsId = 0;
     let tokenLevel2Login = null;
@@ -73,7 +74,7 @@ describe('Trade', () => {
     }
 
     const resultEndpoint = await RequestService.requestPost(host, '/v1/trade-request/sell', {
-      amount: 10000
+      amount: 10001
     }, { authorization: resultLogin.data.accessToken });
     expect(resultEndpoint.code).toBe(1000);
 
@@ -81,11 +82,13 @@ describe('Trade', () => {
       authorization: resultLogin.data.accessToken
     });
     expect(resultCancelTrade.code).toBe(1000);
+
     if (countActive <= 0 && adsId !== 0) {
       //hủy ADS
       const cancelAds = await RequestService.requestDelete(host, `/v1/announcement/${adsId}`, {}, { authorization: tokenLevel2Login });
       expect(cancelAds.code).toEqual(1000);
     }
+
     done();
   });
   afterAll(async (done) => {

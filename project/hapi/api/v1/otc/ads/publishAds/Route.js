@@ -22,7 +22,8 @@ module.exports = [
       response: {
         status: {
           [ResponseCode.REQUEST_SUCCESS]: Joi.object({
-            message: Joi.string().example('Thành công').description('Tạo quảng cáo thành công')
+            message: Joi.string().example('Thành công').description('Tạo quảng cáo thành công'),
+            adsId: Joi.number().allow(null, '').example('1').description('Mã quảng cáo')
           }).description('Thành công'),
           [ResponseCode.REQUEST_FAIL]: Joi.object({
             message: Joi.string().example('Thất bại').description('Tạo quảng cáo thất bại')
