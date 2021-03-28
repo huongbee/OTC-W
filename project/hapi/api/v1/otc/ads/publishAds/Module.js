@@ -138,7 +138,8 @@ module.exports = async (request, reply) => {
         'send-notification');
     }
     return reply.api({
-      message: request.__('Tạo quảng cáo thành công')
+      message: request.__('Tạo quảng cáo thành công'),
+      adsId: ads.id
     }).code(ResponseCode.REQUEST_SUCCESS);
   } catch (err) {
     return reply.api({

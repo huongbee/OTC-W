@@ -71,6 +71,7 @@ const Model = {
     },
     levelAllowed: [Number]
   }, {
+    collection: 'Ads_Temp',
     timestamps: true
   }
   )
