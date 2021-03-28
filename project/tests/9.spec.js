@@ -8,6 +8,24 @@ const sha256 = require('sha256');
 
 //-	Giao dịch được phép hủy sau 60p sau khi tạo giao dịch nếu GD vẫn còn pending
 describe('Trade', () => {
+
+  test('Trade status not be PENDING >> Can not cancel', async (done) => {
+    const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
+      account: 'user.level3@gmail.com',
+      password: sha256('111111')
+    });
+    expect(resultLogin.code).toBe(1000);
+    expect(resultLogin.data.accessToken).toBeTruthy();
+
+    const transaction = '9612017774';
+    const resultCancelTrade = await RequestService.requestDelete(host, `/v1/trade-request/${transaction}/SELL`, {}, {
+      authorization: resultLogin.data.accessToken
+    });
+    expect(resultCancelTrade.code).toBe(1001);
+    expect(resultCancelTrade.data.message).toBe('Trạng thái giao dịch không được phép hủy');
+
+    done();
+  });
   test('Trade new >> Can not cancel trade in 60p', async (done) => {
     const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
       account: 'user.level3@gmail.com',
@@ -36,24 +54,23 @@ describe('Trade', () => {
     done();
   });
 
-  test('Trade was created greater than 60min - PENDING >> Can cancel', async (done) => {
-    const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
-      account: 'user.level3@gmail.com',
-      password: sha256('111111')
-    });
-    expect(resultLogin.code).toBe(1000);
-    expect(resultLogin.data.accessToken).toBeTruthy();
+  // test('Trade was created greater than 60min - PENDING >> Can cancel', async (done) => {
+  //   const resultLogin = await RequestService.requestPost(host, '/v1/account/login', {
+  //     account: 'user.level3@gmail.com',
+  //     password: sha256('111111')
+  //   });
+  //   expect(resultLogin.code).toBe(1000);
+  //   expect(resultLogin.data.accessToken).toBeTruthy();
 
-    const transaction = '2971656541';
-    const resultCancelTrade = await RequestService.requestDelete(host, `/v1/trade-request/${transaction}/SELL`, {}, {
-      authorization: resultLogin.data.accessToken
-    });
-    expect(resultCancelTrade.code).toBe(1000);
-    expect(resultCancelTrade.data.message).toBe('Hủy giao dịch thành công');
+  //   const transaction = '2971656541';
+  //   const resultCancelTrade = await RequestService.requestDelete(host, `/v1/trade-request/${transaction}/SELL`, {}, {
+  //     authorization: resultLogin.data.accessToken
+  //   });
+  //   expect(resultCancelTrade.code).toBe(1000);
+  //   expect(resultCancelTrade.data.message).toBe('Hủy giao dịch thành công');
 
-    done();
-  });
-
+  //   done();
+  // });
   afterAll(async (done) => {
     await mongoose.connection.close();
     done();

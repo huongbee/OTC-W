@@ -38,8 +38,9 @@ describe('Trade', () => {
     ]);
 
     const valuePublish = adsInfo.value; // số Q phát hành
+    const filledAmount = adsInfo.filledAmount; // số v đã thành công
     const amount = adsInfo.amount;// Số Q còn lại
-    const amountLocked = valuePublish - amount;
+    const amountLocked = valuePublish - filledAmount - amount; // v lock = số phát hành  - số v thành công - số v còn lại
     const amountPendingInTrade = _.get(totalPending[0], 'total', 0);
     expect(amountPendingInTrade).toEqual(amountLocked);
     done();

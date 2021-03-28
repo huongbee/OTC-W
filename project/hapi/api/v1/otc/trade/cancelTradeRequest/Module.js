@@ -42,7 +42,6 @@ module.exports = async (request, reply) => {
       }
       const now = moment(new Date());
       const createdAt = moment(new Date(trade.createdAt));
-      console.log(now.diff(createdAt, 'minutes'), timeAllow, trade)
       if (now.diff(createdAt, 'minutes') < timeAllow) throw { message: `Chỉ được hủy giao dịch sau ${timeAllow} phút từ khi tạo giao dịch` };
       const changedStatus = {
         from: trade.status,
