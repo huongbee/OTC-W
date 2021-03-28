@@ -69,7 +69,7 @@ module.exports = {
       }
 
       const startTime = new Date().getTime();
-      console.log('options get', options);
+      // console.log('options get', options);
       Request.get(options, (err, httpResponse, bodyResponse) => {
         // console.log('bodyResponse---------', bodyResponse);
         if (err) {

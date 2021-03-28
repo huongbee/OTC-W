@@ -22,14 +22,14 @@ module.exports = async (request, reply) => {
       let trade = await TradeRequestModel.findOne({
         transaction,
         // type: TradeConstant.TRADE_TYPE.BUY,
-        accountId: userInfo.id,
-        status: {
-          $in: [
-            TradeConstant.TRADE_STATUS.PENDING
-            // TradeConstant.TRADE_STATUS.PAID
-          ]
-        }
-      }, { _id: 0, createdAt: 0 }).lean();
+        accountId: userInfo.id
+        //   status: {
+        //     $in: [
+        //       TradeConstant.TRADE_STATUS.PENDING
+        //       // TradeConstant.TRADE_STATUS.PAID
+        //     ]
+        //   }
+      }).lean();
       if (!trade) {
         throw { message: 'Không tìm thấy thông tin giao dịch' };
       }
@@ -42,7 +42,8 @@ module.exports = async (request, reply) => {
       }
       const now = moment(new Date());
       const createdAt = moment(new Date(trade.createdAt));
-      if (now.diff(createdAt, 'minutes') < timeAllow) throw { message: `Chỉ được hủy giao dịch ${timeAllow} phút sau khi tạo` };
+      console.log(now.diff(createdAt, 'minutes'), timeAllow, trade)
+      if (now.diff(createdAt, 'minutes') < timeAllow) throw { message: `Chỉ được hủy giao dịch sau ${timeAllow} phút từ khi tạo giao dịch` };
       const changedStatus = {
         from: trade.status,
         to: TradeConstant.TRADE_STATUS.CANCELLED,

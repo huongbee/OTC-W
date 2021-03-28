@@ -210,6 +210,10 @@ const Model = {
     proactiveRequest: {
       type: Boolean,
       default: false
+    },
+    createdAt: {
+      type: Date,
+      default: new Date
     }
   }, {
     collection: 'TradeRequest',

@@ -409,7 +409,7 @@ module.exports = {
     const now = moment(new Date());
     const expiredAt = moment(new Date(trade.expiredAt));
     if (now.diff(expiredAt, 'minutes') < 15) {
-      response.message = 'Chỉ được hủy giao dịch 15 phút sau khi tạo';
+      response.message = 'Chỉ được hủy giao dịch sau 15 phút từ khi tạo giao dịch';
       return response;
     }
     const updated = await TradeRequestModel.updateMany(

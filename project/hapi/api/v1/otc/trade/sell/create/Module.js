@@ -108,7 +108,8 @@ module.exports = async (request, reply) => {
         },
         ipnUrl: null,
         expiredAt: Moment(new Date()).add(15, 'minutes'),
-        proactiveRequest: true
+        proactiveRequest: true,
+        createdAt: new Date()
       });
       if (!tradeRequestSeller) {
         throw { message: 'Lỗi hệ thống' };
@@ -249,7 +250,8 @@ module.exports = async (request, reply) => {
           holder: bankInfo.holder,
           branch: bankInfo.branch
         },
-        expiredAt: Moment(new Date()).add(15, 'minutes')
+        expiredAt: Moment(new Date()).add(15, 'minutes'),
+        createdAt: new Date()
       });
       if (!tradeRequestBuyer) {
         throw { message: 'Tạo yêu cầu bán thất bại, vui lòng thử lại' };
@@ -375,7 +377,8 @@ module.exports = async (request, reply) => {
       },
       ipnUrl: null,
       expiredAt: Moment(new Date()).add(15, 'minutes'),
-      proactiveRequest: true
+      proactiveRequest: true,
+      createdAt: new Date()
     });
     if (!tradeRequestSeller) {
       throw { message: 'Tạo yêu cầu mua thất bại, vui lòng thử lại!' };
@@ -421,7 +424,8 @@ module.exports = async (request, reply) => {
         holder: bankInfo.holder,
         branch: bankInfo.branch
       },
-      expiredAt: Moment(new Date()).add(15, 'minutes')
+      expiredAt: Moment(new Date()).add(15, 'minutes'),
+      createdAt: new Date()
     });
     if (!tradeRequestBuyer) {
       throw { message: 'Tạo yêu cầu bán thất bại, vui lòng thử lại' };
