@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-const axios = require('axios');
 const host = 'http://0.0.0.0:3001';
 const randomString = require('uniqid');
 const sha256 = require('sha256');

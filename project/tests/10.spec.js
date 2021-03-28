@@ -38,6 +38,7 @@ describe('Trade', () => {
     const tradeInfo = await TradeRequestModel.findOne({ transaction: resultEndpoint.data.transaction, type: 'SELL' });
     expect(tradeInfo).toBeTruthy();
     expect(tradeInfo.status).toBe('SUCCEEDED');
+    expect(tradeInfo.status).not.toBe('PENDING');
 
     done();
   });
