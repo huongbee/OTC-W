@@ -14,11 +14,16 @@ module.exports = async (request, reply) => {
         message: 'Bạn không có quyền thực hiện'
       }).code(ResponseCode.REQUEST_FAIL);
     }
-    const { filter: { accountType = null, searchQuery, isActive },
+    const {
+      filter: { accountType = null, searchQuery, isActive, id },
       paging: { start, limit },
-      sort } = request.payload;
+      sort
+    } = request.payload;
 
     const where = {};
+    if (id) {
+      where.id = id;
+    }
 
     if (accountType !== null) {
       if (_.isArray(accountType)) {

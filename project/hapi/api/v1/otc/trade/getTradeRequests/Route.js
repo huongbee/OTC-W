@@ -12,7 +12,10 @@ module.exports = [
       description: 'Lấy danh sách giao dịch',
       validate: {
         payload: Joi.object({
-          filter: Joi.object({}),
+          filter: Joi.object({
+            transaction: Joi.string().allow('', null),
+            type: Joi.string().allow('', null).valid('BUY', 'SELL').required().example('SELL')
+          }),
           paging: {
             start: Joi.number().required().example(0).default(0)
               .description('Số bắt đầu'),

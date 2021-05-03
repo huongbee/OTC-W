@@ -12,6 +12,7 @@ module.exports = [
       validate: {
         payload: Joi.object({
           filter: {
+            id: Joi.number().allow(null, ''),
             accountType: Joi.alternatives().try(
               Joi.number().example(1).description('Loại tài khoản'),
               Joi.array().allow(null, '').example([1, 2, 3]).description('DS Loại tài khoản')

@@ -6,14 +6,20 @@ const _ = require('lodash');
 
 module.exports = async (request, reply) => {
   try {
-    const { paging: { start, limit }, sort } = request.payload;
+    const { filter: { transaction, type }, paging: { start, limit }, sort } = request.payload;
     const authInfo = request.auth.credentials;
 
     if (_.isEmpty(sort)) sort.updatedAt = -1;
     // const ads = await AdsModel.find({ accountId: authInfo.accountId }, { _id: 0 }).lean();
     // const adsIds = _.map(ads, 'id');
     // console.log(adsIds);
-    const where = { accountId: authInfo.accountId };
+    const where = {
+      accountId: authInfo.accountId,
+      type
+    };
+    if (transaction) {
+      where.transaction = transaction;
+    }
     const tradeRequests = await TradeRequestModel.find(where, { _id: 0, createdAt: 0 })
       .sort(sort)
       .skip(start)
